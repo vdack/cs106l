@@ -25,9 +25,9 @@ const std::string COURSES_NOT_OFFERED_PATH = "student_output/courses_not_offered
  * Hint: Remember what types C++ streams work with?!
  */
 struct Course {
-  /* STUDENT TODO */ title;
-  /* STUDENT TODO */ number_of_units;
-  /* STUDENT TODO */ quarter;
+  std::string title;
+  std::string number_of_units;
+  std::string quarter;
 };
 
 /**
@@ -58,8 +58,19 @@ struct Course {
  * @param filename The name of the file to parse.
  * @param courses  A vector of courses to populate.
  */
-void parse_csv(std::string filename, std::vector<Course> courses) {
-  /* (STUDENT TODO) Your code goes here... */
+void parse_csv(std::string filename, std::vector<Course>& courses) {
+  std::ifstream fcsv("courses.csv");
+  std::string line;
+  std::getline(fcsv, line);
+  while (!fcsv.eof()) {
+    std::getline(fcsv, line);
+    std::vector<std::string> words =  split(line, ',');
+    if (words.size() <= 0) {
+      break;
+    }
+    courses.push_back({words.at(0), words.at(1), words.at(2)});
+  }
+  fcsv.close();
 }
 
 /**
@@ -81,7 +92,15 @@ void parse_csv(std::string filename, std::vector<Course> courses) {
  *                    This vector will be modified by removing all offered courses.
  */
 void write_courses_offered(std::vector<Course> all_courses) {
-  /* (STUDENT TODO) Your code goes here... */
+  std::ofstream foc(COURSES_OFFERED_PATH);
+  foc<<"Title,Number of Units,Quarter\n";
+  for (auto c : all_courses) {
+    if (c.quarter.compare("null") == 0) {
+      continue;
+    }
+    foc<<c.title<<','<<c.number_of_units<<','<<c.quarter<<'\n';
+  }
+  foc.close();
 }
 
 /**
@@ -98,7 +117,15 @@ void write_courses_offered(std::vector<Course> all_courses) {
  * @param unlisted_courses A vector of courses that are not offered.
  */
 void write_courses_not_offered(std::vector<Course> unlisted_courses) {
-  /* (STUDENT TODO) Your code goes here... */
+  std::ofstream foc(COURSES_NOT_OFFERED_PATH);
+  foc<<"Title,Number of Units,Quarter\n";
+  for (auto c : unlisted_courses) {
+    if (c.quarter.compare("null") != 0) {
+      continue;
+    }
+    foc<<c.title<<','<<c.number_of_units<<','<<c.quarter<<'\n';
+  }
+  foc.close();
 }
 
 int main() {
