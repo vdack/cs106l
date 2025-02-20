@@ -14,7 +14,7 @@
 #include <string>
 #include <unordered_set>
 
-std::string kYourName = "STUDENT TODO"; // Don't forget to change this!
+std::string kYourName = "Vdack Chen"; // Don't forget to change this!
 
 /**
  * Takes in a file name and returns a set containing all of the applicant names as a set.
@@ -28,7 +28,30 @@ std::string kYourName = "STUDENT TODO"; // Don't forget to change this!
  * to also change the corresponding functions in `utils.h`.
  */
 std::set<std::string> get_applicants(std::string filename) {
-  // STUDENT TODO: Implement this function.
+  std::ifstream fnames(filename);
+  std::set<std::string> names; 
+  while(!fnames.eof()){
+    std::string name;
+    std::getline(fnames, name);
+    if (name.size() == 0){
+      continue;
+    }
+    names.insert(name);
+  }
+  fnames.close();
+  return names;
+}
+
+bool shareInitials(const std::string& name1, const std::string& name2) {
+  if (name1[0] != name2[0]) {
+    return false;
+  }
+  int posi1 = name1.find(' ');
+  int posi2 = name2.find(' ');
+  if (name1[posi1 + 1] != name2[posi2 + 1]){
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -40,8 +63,18 @@ std::set<std::string> get_applicants(std::string filename) {
  * @return          A queue containing pointers to each matching name.
  */
 std::queue<const std::string*> find_matches(std::string name, std::set<std::string>& students) {
-  // STUDENT TODO: Implement this function.
+  std::queue<const std::string*> matched_names;
+  std::cout<<name<<std::endl;
+  int length = name.size();
+  for (const std::string& candidate_name: students) {
+    if (shareInitials(candidate_name, name)) {
+      matched_names.push(&candidate_name);
+    }
+  }
+  return matched_names;
 }
+
+
 
 /**
  * Takes in a queue of pointers to possible matches and determines the one true match!
@@ -54,7 +87,10 @@ std::queue<const std::string*> find_matches(std::string name, std::set<std::stri
  *                Will return "NO MATCHES FOUND." if `matches` is empty.
  */
 std::string get_match(std::queue<const std::string*>& matches) {
-  // STUDENT TODO: Implement this function.
+  if (matches.empty()) {
+    return "NO MATCHES FOUND.";
+  }
+  return *matches.front();
 }
 
 /* #### Please don't remove this line! #### */
