@@ -36,3 +36,4 @@ std::set<Mispelling> spellcheck(const Corpus& source, const Dictionary& dictiona
 size_t levenshtein(const std::string&, const std::string&);
 bool operator<(const Token&, const Token&);
 bool operator<(const Mispelling&, const Mispelling&);
+std::set<std::string> suggestWords(std::string& missplled, const Dictionary& dictionary);
