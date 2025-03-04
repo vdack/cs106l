@@ -91,6 +91,10 @@ User& User::operator=(const User& user) {
 }
 std::ostream& operator<< (std::ostream& os, const User& user) {
   os<<"User(name="<<user._name<<", friends=[";
+  if (user._size == 0) {
+    os<<"])";
+    return os;
+  }
   for (size_t i = 0; i < user._size - 1; i += 1) {
     os<<user._friends[i]<<", ";
   }

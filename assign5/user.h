@@ -26,7 +26,7 @@ public:
   User(const User&& user) = delete;
   User& operator=(const User&& user) = delete;
   ~User();
-  friend std::ostream& operator<<(std::ostream& os,const User& user);
+  friend std::ostream& operator<<(std::ostream& os, const User& user);
 
   User& operator+=(User& rhs);
   bool operator<(const User& rhs) const; 
