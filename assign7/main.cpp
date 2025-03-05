@@ -7,6 +7,7 @@
 #include <iostream>
 #include <sstream>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 #include "unique_ptr.h"
@@ -51,8 +52,14 @@ template <typename T> struct ListNode {
  * @return A `unique_ptr` to the head of the list.
  */
 template <typename T> cs106l::unique_ptr<ListNode<T>> create_list(const std::vector<T>& values) {
-  /* STUDENT TODO: Implement this method */
-  throw std::runtime_error("Not implemented: createList");
+  if (values.empty()) return cs106l::make_unique<ListNode<T>>(nullptr);
+  cs106l::unique_ptr<ListNode<T>> ptr = nullptr;
+  for (auto tail = values.end() - 1; tail >= values.begin(); tail -= 1) {
+    cs106l::unique_ptr<ListNode<T>> node = cs106l::make_unique<ListNode<T>>(*tail);
+    node->next = std::move(ptr);
+    ptr = std::move(node);
+  }
+  return ptr;
 }
 
 /**
