@@ -28,21 +28,24 @@ Corpus tokenize(const std::string& source) {
 std::set<Mispelling> spellcheck(const Corpus& source, const Dictionary& dictionary) {
   namespace rv = std::ranges::views;
   auto view =  source 
-    | rv::filter([&](Token token){return !dictionary.contains(token.content);})
+    | rv::filter(
+      [&](Token token){ return !dictionary.contains(token.content); }
+    )
     | rv::transform(
-      [&](Token token){
-        return Mispelling{token, {} };
-      }
+      [&](Token token){ return Mispelling{token, {}}; }
     )
     | rv::transform(
       [&](Mispelling missplled) {
-        auto suggestion_view = dictionary| rv::filter([&](std::string word) {return ::levenshtein(missplled.token.content, word) == 1;});
+        auto suggestion_view = dictionary 
+          | rv::filter(
+            [&](std::string word) { return ::levenshtein(missplled.token.content, word) == 1; }
+          );
         missplled.suggestions = std::set<std::string> (suggestion_view.begin(), suggestion_view.end());
         return missplled;
       }
     )
     | rv::filter(
-      [&](Mispelling missplled) {return missplled.suggestions.size() > 0;}
+      [&](Mispelling missplled) { return missplled.suggestions.size() > 0;}
     );
   return std::set<Mispelling>(view.begin(), view.end());
 };
